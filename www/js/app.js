@@ -41,14 +41,14 @@ angular.module('starter', ['ionic','googleplus'])
       },
       function (err) {
         console.log('Erro: '+err);
-      })
+      });
+      
     } else {
       // Usando a lib do angular para fazer login
       GooglePlus.login().then(function (res) {
         GooglePlus.getUser().then(function (user) {
           $scope.user = user;
         });
-
       }, function (err) {
         console.log(err)
       });  
