@@ -87,6 +87,22 @@ $ ionic run android
 E fazer o login clicando no botton Google Plus Login.
 *Vale lembrar que voce precisa ter o app do google plus intalado no device, eu acho.*
 
+### Logout
+
+Temos q fazer o logout tbm, para isso eh so usarmos a funcao `disconnect` e verificar se estamos no `Browser` ou na `WebView`.
+```js
+$scope.logout = function () {
+    if (ionic.Platform.isWebView()){
+      window.plugins.googleplus.disconnect(function (msg) {
+        $scope.user = null;
+      })  
+    } else {
+      gapi.auth.signOut(); 
+      $scope.user = null;
+    }
+  }
+```
+
 Sem duvida, o melhor seria montar uma `Factory` que encapsulasse essa logica do login e oferecesse uma API unificada para o login tanto na web quando no device, mas aqui eh so um exemplo.
 
 No proximo, vamos fazer login com o facebook na web.

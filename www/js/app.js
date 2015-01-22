@@ -42,7 +42,7 @@ angular.module('starter', ['ionic','googleplus'])
       function (err) {
         console.log('Erro: '+err);
       });
-      
+
     } else {
       // Usando a lib do angular para fazer login
       GooglePlus.login().then(function (res) {
@@ -56,7 +56,17 @@ angular.module('starter', ['ionic','googleplus'])
   }
 
   $scope.logout = function () {
-    gapi.auth.signOut();
-    $scope.user = null;
+    if (ionic.Platform.isWebView()){
+      window.plugins.googleplus.disconnect(function (msg) {
+        $scope.user = null;
+      })  
+    } else {
+      gapi.auth.signOut(); 
+      $scope.user = null;
+    }
+    
+
+    
+    
   }
 })
