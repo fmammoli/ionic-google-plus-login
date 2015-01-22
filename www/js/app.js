@@ -25,20 +25,34 @@ angular.module('starter', ['ionic','googleplus'])
      });
 }])
 
-.controller('LoginCtrl', function ($scope, GooglePlus) {
+.controller('LoginCtrl', function ($scope, GooglePlus, $ionicPlatform) {
   $scope.facebookLogin = function () {
     alert('Facebook Login');
   }
 
   $scope.googlePlusLogin = function () {
-    GooglePlus.login().then(function (res) {
-      GooglePlus.getUser().then(function (user) {
+    if (ionic.Platform.isWebView()){
+      // Usando o plugin do cordova para fazer login
+      window.plugin.googleplus.login({
+        'iOSApiKey':''
+      },
+      function (user) {
         $scope.user = user;
-      });
+      },
+      function (err) {
+        console.log('Erro: '+err);
+      })
+    } else {
+      // Usando a lib do angular para fazer login
+      GooglePlus.login().then(function (res) {
+        GooglePlus.getUser().then(function (user) {
+          $scope.user = user;
+        });
 
-    }, function (err) {
-      console.log(err)
-    })
+      }, function (err) {
+        console.log(err)
+      });  
+    }
   }
 
   $scope.logout = function () {
