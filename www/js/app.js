@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic','googleplus'])
+angular.module('starter', ['ionic','googleplus', 'facebook'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -18,6 +18,9 @@ angular.module('starter', ['ionic','googleplus'])
   });
 })
 
+.config(['FacebookProvider',function(FacebookProvider) {
+  FacebookProvider.init('418299155015136');
+}])
 .config(['GooglePlusProvider', function(GooglePlusProvider) {
      GooglePlusProvider.init({
         clientId: '525447299557-32gmltal4ahki7tqnntdq4b1berbevgk.apps.googleusercontent.com',
@@ -25,9 +28,14 @@ angular.module('starter', ['ionic','googleplus'])
      });
 }])
 
-.controller('LoginCtrl', function ($scope, GooglePlus, $ionicPlatform) {
+.controller('LoginCtrl', function ($scope, GooglePlus, $ionicPlatform, Facebook) {
   $scope.facebookLogin = function () {
-    alert('Facebook Login');
+    
+    Facebook.login(function (response) {
+      Facebook.api('/me', function (me) {
+        $scope.user = me;
+      });
+    });
   }
 
   $scope.googlePlusLogin = function () {
@@ -56,6 +64,7 @@ angular.module('starter', ['ionic','googleplus'])
   }
 
   $scope.logout = function () {
+    Facebook.logout();
     if (ionic.Platform.isWebView()){
       window.plugins.googleplus.disconnect(function (msg) {
         $scope.user = null;
@@ -64,9 +73,5 @@ angular.module('starter', ['ionic','googleplus'])
       gapi.auth.signOut(); 
       $scope.user = null;
     }
-    
-
-    
-    
   }
 })
