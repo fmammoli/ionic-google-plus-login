@@ -30,13 +30,30 @@ angular.module('starter', ['ionic','googleplus', 'facebook'])
 
 .controller('LoginCtrl', function ($scope, GooglePlus, $ionicPlatform, Facebook) {
   $scope.facebookLogin = function () {
+    facebookConnectPlugin.login(["public_profile"],
+      function (res) {
+        facebookConnectPlugin.api('/me', ['public_profile'],
+          function (user) {
+            $scope.user = user;
+          }
+        );
+    });
+  }
+
+  $scope.logout = function () {
+    facebookConnectPlugin.logout(function (res) {
+      alert('Logged out!');
+    });
+  }
+
+  /*$scope.facebookLogin = function () {
     
     Facebook.login(function (response) {
       Facebook.api('/me', function (me) {
         $scope.user = me;
       });
     });
-  }
+  }*/
 
   $scope.googlePlusLogin = function () {
     if (ionic.Platform.isWebView()){
